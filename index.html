@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CMIP6 • Global & Regional Warming Explorer</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- D3 & TopoJSON (non-plotting helper) -->
+  <script src="https://unpkg.com/d3@7"></script>
+  <script src="https://unpkg.com/topojson-client@3"></script>
+</head>
+<body>
+  <header>
+    <h1>CMIP6 Warming Explorer</h1>
+    <p>Explore global and regional surface temperature change (tas).</p>
+  </header>
+
+  <section class="controls">
+    <label for="year">Year:</label>
+    <input id="year" type="range" min="1950" max="2014" step="1" value="2010" />
+    <span id="year-value">2010</span>
+
+    <label for="metric">Metric:</label>
+    <select id="metric">
+      <option value="anomaly">Temperature anomaly (°C)</option>
+      <option value="temp_c">Raw temperature (°C)</option>
+    </select>
+
+    <div class="regions">
+      <span>Quick regions:</span>
+      <button data-region="Global">Global</button>
+      <button data-region="Arctic">Arctic</button>
+      <button data-region="Tropics">Tropics</button>
+      <button data-region="US">US</button>
+      <button data-region="Europe">Europe</button>
+    </div>
+  </section>
+
+  <main>
+    <div class="viz">
+      <div class="panel">
+        <h2>Map</h2>
+        <svg id="map" width="840" height="450" aria-label="World map of anomalies"></svg>
+        <div id="legend"></div>
+      </div>
+      <div class="panel">
+        <h2>Temperature over Time</h2>
+        <svg id="series" width="840" height="300" aria-label="Temperature time series"></svg>
+        <div id="series-legend" class="series-legend"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Built with D3.js. Replace sample CSVs in <code>/data</code> with your CMIP6 exports.</p>
+  </footer>
+
+  <div id="tooltip" class="tooltip" role="status" aria-live="polite"></div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
