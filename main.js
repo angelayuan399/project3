@@ -1,6 +1,5 @@
 import { createExtremeHeatChart } from "./js/chart-extreme-heat.js";
 import { createDecadalComparisonChart } from "./js/chart-decal-comparison.js";
-import { createTimeSeriesChart } from "./js/chart-time-series.js";
 import { createRegionalHeatmap } from './js/chart-regional-heatmap.js';
 import { createScenarioComparison } from './js/chart-scenario-comparison.js';
 import { createAnomalyChart } from './js/chart-anomaly-multiple.js';
@@ -229,7 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
         createRegionalHeatmap(ssp585_data);
         createScenarioComparison(dumbbell_data);
         createAnomalyChart(data);
-        createTimeSeriesChart();
         createExtremeHeatChart();
         createDecadalComparisonChart();
 

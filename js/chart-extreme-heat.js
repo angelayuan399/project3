@@ -88,11 +88,6 @@ export function createExtremeHeatChart() {
         .attr('viewBox', `0 0 ${extremeHeatConfig.width} ${extremeHeatConfig.height}`)
         .attr('preserveAspectRatio', 'xMidYMid meet');
 
-    // Caption / short explanation
-    chartSection.append('p')
-        .attr('class', 'chart-caption')
-        .text('Projected annual number of days exceeding temperature thresholds for each region. Use the selectors to compare thresholds and focus on specific regions.');
-
     const { width, height, margin } = extremeHeatConfig;
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -297,45 +292,4 @@ export function createExtremeHeatChart() {
 
     // Initial render
     updateHeatChart();
-
-    // Add info box
-    const infoBox = chartSection.append('div')
-        .attr('class', 'info-panel')
-        .style('margin-top', '30px')
-        .style('border-left', '5px solid #ef4444');
-
-    infoBox.append('h3')
-        .style('color', '#2d3748')
-        .style('margin-bottom', '15px')
-        .html('🔥 Critical Insight: Exponential Growth in Extreme Heat');
-
-    infoBox.append('p')
-        .style('color', '#4a5568')
-        .style('line-height', '1.6')
-        .style('margin-bottom', '12px')
-        .html('<strong>Why this matters:</strong> The number of extreme heat days is projected to increase by 200-450% across US regions by 2100. This exponential growth has severe implications for:');
-
-    const impactsList = infoBox.append('ul')
-        .style('color', '#4a5568')
-        .style('line-height', '1.8')
-        .style('margin-left', '20px');
-
-    [
-        '<strong>Public Health:</strong> Heat-related mortality and emergency room visits will surge, particularly affecting vulnerable populations',
-        '<strong>Infrastructure:</strong> Power grids face stress from cooling demands; roads and railways can buckle under extreme heat',
-        '<strong>Agriculture:</strong> Crop yields decline and livestock productivity suffers during prolonged heat waves',
-        '<strong>Labor Productivity:</strong> Outdoor work becomes dangerous or impossible, especially in the Southwest Interior region',
-        '<strong>Energy Demand:</strong> Cooling costs skyrocket as air conditioning becomes a necessity rather than a comfort'
-    ].forEach(text => {
-        impactsList.append('li')
-            .html(text)
-            .style('margin-bottom', '8px');
-    });
-
-    infoBox.append('p')
-        .style('color', '#4a5568')
-        .style('line-height', '1.6')
-        .style('margin-top', '15px')
-        .style('font-style', 'italic')
-        .html('The Southwest Interior and Great Plains show the steepest increases, with extreme heat days (>105°F) potentially increasing from 15 to over 80 days annually—more than 2 months of dangerous heat conditions.');
 }
