@@ -16,7 +16,7 @@ const config = {
         margin: { top: 30, right: 120, bottom: 50, left: 60 }
     },
     colorScale: {
-        domain: [0, 2, 3, 4, 5, 6, 7],
+        domain: [0, 2, 3, 4, 5, 6, 7], 
         range: ['#FFFFCC', '#FFEDA0', '#FED976', '#FEB24C', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026']
     }
 };
@@ -245,6 +245,11 @@ function createTemperatureMap() {
     // Store for updates
     window.mapCells = cells;
     window.mapColorScale = colorScale;
+
+    // Caption for map
+    d3.select('#map-container').append('p')
+        .attr('class', 'chart-caption')
+        .text('Spatial representation of projected temperature increase by 2100. Hover cells for local values and click regions to view regional time series.');
 }
 
 // ===================================================================
@@ -373,6 +378,12 @@ function createTimeSeriesChart() {
     
     window.timeSeriesXScale = xScale;
     window.timeSeriesYScale = yScale;
+
+    // Caption for time series
+    const tsContainer = d3.select(d3.select('#time-series').node().parentNode);
+    tsContainer.append('p')
+        .attr('class', 'chart-caption')
+        .text('Regional temperature trajectories from 2025 to 2100. Click a region on the map to highlight its line. Threshold lines mark important policy-relevant levels.');
 }
 
 // ===================================================================
@@ -539,6 +550,39 @@ function highlightAllBoundaries(state) {
 }
 
 // Tooltip functions
+// Position tooltip so it doesn't overflow the viewport
+function positionTooltip(event, tooltipSel) {
+    const tooltip = tooltipSel || d3.select('#tooltip');
+    const node = tooltip.node();
+    if (!node) return;
+    // allow the browser to render the content so we can measure it
+    tooltip.classed('visible', true);
+    const rect = node.getBoundingClientRect();
+    const pageX = event.pageX;
+    const pageY = event.pageY;
+    const winW = window.innerWidth;
+    const winH = window.innerHeight;
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+
+    let left = pageX + 15;
+    let top = pageY - rect.height - 10;
+
+    // If tooltip would overflow right edge, position to the left of cursor
+    if (left + rect.width + 12 > scrollX + winW) {
+        left = pageX - rect.width - 20;
+    }
+
+    // If tooltip would go above the top of the viewport, place it below cursor
+    if (top < scrollY + 10) {
+        top = pageY + 15;
+    }
+
+    // Apply positions (use page coordinates)
+    tooltip.style('left', (left) + 'px')
+           .style('top', (top) + 'px');
+}
+
 function showTooltip(event, d) {
     const yearProgress = (currentYear - 2025) / (2100 - 2025);
     const tempAtYear = d.temp2100 * yearProgress;
@@ -548,9 +592,10 @@ function showTooltip(event, d) {
         <strong>Location:</strong> ${d.lat.toFixed(1)}°N, ${Math.abs(d.lon).toFixed(1)}°W<br>
         <strong>Temp Increase (${currentYear}):</strong> ${tempAtYear.toFixed(2)}°C
     `)
-    .style('left', (event.pageX + 15) + 'px')
-    .style('top', (event.pageY - 15) + 'px')
     .classed('visible', true);
+
+    // Smart position
+    positionTooltip(event, tooltip);
 }
 
 function showRegionTooltip(event, regionName, temp) {
@@ -560,9 +605,10 @@ function showRegionTooltip(event, regionName, temp) {
         Temperature Increase (${currentYear}): ${temp.toFixed(2)}°C<br>
         <em>Click to highlight in time series</em>
     `)
-    .style('left', (event.pageX + 15) + 'px')
-    .style('top', (event.pageY - 15) + 'px')
     .classed('visible', true);
+
+    // Smart position
+    positionTooltip(event, tooltip);
 }
 
 function hideTooltip() {

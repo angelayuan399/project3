@@ -374,3 +374,50 @@ footer strong {
     stroke-width: 2;
     stroke-dasharray: 3,3;
 }
+
+
+/* Make all SVGs responsive by using their viewBox and allowing height to scale */
+#temperature-map,
+#time-series,
+#extreme-heat-chart,
+#decadal-chart,
+#legend-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Preserve aspect ratios and provide sensible minimum heights on small screens */
+#temperature-map { aspect-ratio: 1200 / 600; min-height: 320px; }
+#time-series { aspect-ratio: 1200 / 400; min-height: 240px; }
+#extreme-heat-chart { aspect-ratio: 1200 / 500; min-height: 260px; }
+#decadal-chart { aspect-ratio: 1200 / 500; min-height: 260px; }
+
+/* Chart captions */
+.chart-caption {
+    margin-top: 12px;
+    color: #4a5568;
+    font-size: 0.95em;
+    font-style: italic;
+}
+
+/* Tooltip improvements for long labels and small screens */
+#tooltip {
+    max-width: 300px;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+    /* On very small screens, position tooltip below cursor and expand width */
+    #tooltip {
+        max-width: calc(100% - 32px);
+        left: 16px !important;
+        right: 16px !important;
+        top: auto !important;
+        bottom: 16px !important;
+        transform: none !important;
+        pointer-events: auto;
+    }
+}

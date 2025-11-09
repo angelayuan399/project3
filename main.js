@@ -157,6 +157,11 @@ function createExtremeHeatChart() {
         .attr('id', 'extreme-heat-chart')
         .attr('viewBox', `0 0 ${extremeHeatConfig.width} ${extremeHeatConfig.height}`)
         .attr('preserveAspectRatio', 'xMidYMid meet');
+
+    // Caption / short explanation
+    chartSection.append('p')
+        .attr('class', 'chart-caption')
+        .text('Projected annual number of days exceeding temperature thresholds for each region. Use the selectors to compare thresholds and focus on specific regions.');
     
     const { width, height, margin } = extremeHeatConfig;
     const innerWidth = width - margin.left - margin.right;
@@ -307,14 +312,17 @@ function createExtremeHeatChart() {
                     Increase: +${increase}%<br/>
                     <em>Threshold: ${thresholdLabels[selectedThreshold]}</em>
                 `)
-                .style('left', (event.pageX + 15) + 'px')
-                .style('top', (event.pageY - 15) + 'px')
                 .classed('visible', true);
+
+                // Smart positioning (defined in script.js)
+                if (typeof positionTooltip === 'function') {
+                    positionTooltip(event, tooltip);
+                }
             })
             .on('mousemove', function(event) {
-                d3.select('#tooltip')
-                    .style('left', (event.pageX + 15) + 'px')
-                    .style('top', (event.pageY - 15) + 'px');
+                if (typeof positionTooltip === 'function') {
+                    positionTooltip(event, d3.select('#tooltip'));
+                }
             })
             .on('mouseout', function(event, d) {
                 d3.select(this)
@@ -435,6 +443,11 @@ function createDecadalComparisonChart() {
         .attr('id', 'decadal-chart')
         .attr('viewBox', `0 0 ${config.width} ${config.height}`)
         .attr('preserveAspectRatio', 'xMidYMid meet');
+
+    // Caption
+    chartSection.append('p')
+        .attr('class', 'chart-caption')
+        .text('Temperature increase relative to a 2025 baseline for each decade. Bars show regional warming trends and their acceleration over time.');
     
     const { width, height, margin } = config;
     const innerWidth = width - margin.left - margin.right;
@@ -553,9 +566,11 @@ function createDecadalComparisonChart() {
                 Increase: <strong>+${d.temp.toFixed(2)}°C</strong><br/>
                 (${(d.temp * 1.8).toFixed(1)}°F above 2025)
             `)
-            .style('left', (event.pageX + 15) + 'px')
-            .style('top', (event.pageY - 15) + 'px')
             .classed('visible', true);
+
+            if (typeof positionTooltip === 'function') {
+                positionTooltip(event, tooltip);
+            }
         })
         .on('mouseout', function() {
             d3.select(this)
