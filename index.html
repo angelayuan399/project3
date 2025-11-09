@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>US Temperature Increase Visualization | CMIP6 Climate Data</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link rel="stylesheet" href="styles.css">
+
+    <!-- <script src="script.js" type="module"></script> -->
+    <script src="main.js" type="module"></script>
 </head>
+
 <body>
+    <div id="tooltip"></div>
     <div class="container">
         <!-- Header -->
         <header>
@@ -21,9 +27,8 @@
             <div class="visualization-container">
                 <div id="map-container">
                     <svg id="temperature-map"></svg>
-                    <div id="tooltip"></div>
                 </div>
-                
+
                 <!-- Time Slider -->
                 <div class="controls">
                     <div class="slider-container">
@@ -38,7 +43,7 @@
                             <span>2100</span>
                         </div>
                     </div>
-                    
+
                     <button id="play-button" class="play-btn">▶ Play Animation</button>
                 </div>
 
@@ -54,6 +59,12 @@
                 <h2>Regional Temperature Evolution</h2>
                 <p class="chart-subtitle">Click on the map to highlight a region's trajectory</p>
                 <svg id="time-series"></svg>
+            </div>
+
+            <div class="chart-container">
+                <h2>Regional Warming Evolution (Heatmap)</h2>
+                <p class="chart-subtitle">Projected July average temperature (°C) under SSP5-8.5</p>
+                <svg id="regional-heatmap"></svg>
             </div>
         </main>
 
@@ -72,12 +83,11 @@
 
         <!-- Footer -->
         <footer>
-            <p><strong>Data Source:</strong> CMIP6 Climate Model Projections | <strong>Scenario:</strong> SSP5-8.5 (High Emissions)</p>
+            <p><strong>Data Source:</strong> CMIP6 Climate Model Projections | <strong>Scenario:</strong> SSP5-8.5 (High
+                Emissions)</p>
             <p><strong>Baseline:</strong> 2000-2020 average temperatures</p>
         </footer>
     </div>
-
-    <script src="script.js"></script>
-    <script src="main.js"></script>
 </body>
+
 </html>
