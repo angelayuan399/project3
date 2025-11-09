@@ -1,4 +1,4 @@
-import { createExtremeHeatChart } from "./js/chart-extreme-heat.js";
+// import { createExtremeHeatChart } from "./js/chart-extreme-heat.js";
 import { createDecadalComparisonChart } from "./js/chart-decal-comparison.js";
 import { createTemperatureMap, updateMap } from "./js/chart-temp-map.js";
 import { createTimeSeriesChart } from "./js/chart-time-series.js";
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         createTemperatureMap();
         createTimeSeriesChart();
-        createExtremeHeatChart();
+        // createExtremeHeatChart();
         createDecadalComparisonChart();
 
         createLegend();
