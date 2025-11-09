@@ -29,11 +29,6 @@ export function createDecadalComparisonChart() {
         .attr('id', 'decadal-chart')
         .attr('viewBox', `0 0 ${config.width} ${config.height}`)
         .attr('preserveAspectRatio', 'xMidYMid meet');
-
-    // Caption
-    chartSection.append('p')
-        .attr('class', 'chart-caption')
-        .text('Temperature increase relative to a 2025 baseline for each decade. Bars show regional warming trends and their acceleration over time.');
     
     const { width, height, margin } = config;
     const innerWidth = width - margin.left - margin.right;
