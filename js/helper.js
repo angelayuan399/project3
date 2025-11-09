@@ -1,5 +1,6 @@
 import { config, regions } from "../main.js";
-import { currentYear } from "./chart-temp-map.js";
+
+let currentYear = 2100;
 
 export function createLegend() {
     const svg = d3.select('#legend-svg');
@@ -94,6 +95,7 @@ export function highlightAllBoundaries(state) {
         .attr('stroke-opacity', 0.6)
         .attr('stroke', '#333');
 }
+
 
 // Tooltip functions
 // Position tooltip so it doesn't overflow the viewport

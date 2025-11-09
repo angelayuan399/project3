@@ -1,6 +1,5 @@
 import { createExtremeHeatChart } from "./js/chart-extreme-heat.js";
 import { createDecadalComparisonChart } from "./js/chart-decal-comparison.js";
-import { createTemperatureMap, updateMap } from "./js/chart-temp-map.js";
 import { createTimeSeriesChart } from "./js/chart-time-series.js";
 import { createRegionalHeatmap } from './js/chart-regional-heatmap.js';
 import { createScenarioComparison } from './js/chart-scenario-comparison.js';
@@ -230,14 +229,11 @@ document.addEventListener('DOMContentLoaded', () => {
         createRegionalHeatmap(ssp585_data);
         createScenarioComparison(dumbbell_data);
         createAnomalyChart(data);
-
-        createTemperatureMap();
         createTimeSeriesChart();
         createExtremeHeatChart();
         createDecadalComparisonChart();
 
         createLegend();
-        updateMap(2100);
         
     }).catch(error => {
         console.error("Error loading the CSV file:", error);
