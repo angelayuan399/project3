@@ -225,13 +225,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // --- CALL CHARTS ---
 
-        createRegionalHeatmap(ssp585_data);
-        createScenarioComparison(dumbbell_data);
+        // createRegionalHeatmap(ssp585_data);
+        // createScenarioComparison(dumbbell_data);
         createAnomalyChart(data);
-        createExtremeHeatChart();
-        createDecadalComparisonChart();
+        // createExtremeHeatChart();
+        // createDecadalComparisonChart();
 
-        createLegend();
+        // createLegend();
         
     }).catch(error => {
         console.error("Error loading the CSV file:", error);
