@@ -281,4 +281,166 @@ export function createAnomalyChart(data) {
         .style("font-style", "italic")
         .style("fill", "#666")
         .text("💡 Hover over regions to compare • Hover over data points for exact values");
+
+    const container = d3.select("#anomaly-charts").node().parentNode;
+    
+    // Create writeup section
+    const writeupSection = d3.select(container)
+        .append("div")
+        .attr("class", "writeup-section")
+        .style("background", "linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)")
+        .style("border-radius", "12px")
+        .style("padding", "40px 50px")
+        .style("margin-top", "40px")
+        .style("box-shadow", "0 4px 12px rgba(0,0,0,0.08)")
+        .style("border-left", "5px solid #667eea");
+
+    // Rationale section
+    const rationaleDiv = writeupSection.append("div")
+        .style("margin-bottom", "40px");
+
+    rationaleDiv.append("h2")
+        .style("color", "#2d3748")
+        .style("font-size", "1.8em")
+        .style("margin-bottom", "20px")
+        .style("font-weight", "700")
+        .style("font-family", "sans-serif")
+        .html("📊 Rationale for Design Decisions");
+
+    const rationaleParagraphs = [
+        "This visualization compares projected July temperature increases across four U.S. regions—the <strong>Northeast, Southeast, Midwest, and West</strong>—under two greenhouse gas emission scenarios (SSP2-4.5 and SSP5-8.5) from the CMIP6 dataset. We used a <strong>small-multiples layout</strong> so that viewers can easily compare regional patterns side by side without the chart feeling cluttered. Keeping the same scales across each plot helps highlight how differently each region responds to the same emissions scenario.",
+        
+        "We chose <strong style='color: #4e79a7;'>blue for the medium-emission case</strong> and <strong style='color: #e15759;'>red for the high-emission case</strong> because those colors naturally suggest cooler and hotter outcomes. The goal was to make the contrast between the two scenarios instantly recognizable, even at a glance.",
+        
+        "The <strong>interactive tooltips</strong> were added to make the visualization more exploratory and engaging. When users hover over a data point, they can see the exact year and projected temperature increase. This interactivity helps readers spot trends that might be easy to miss in a static plot. By hovering over points, users can see the exact year and temperature increase, which helps them connect the general trend lines to specific moments in time. This makes it much easier to notice details like when temperature growth speeds up, slows down, or diverges between emission scenarios.",
+        
+        "If all the data points were shown on a static plot, the result would be significant <strong>overplotting</strong>, making it difficult to distinguish year-to-year variations or regional differences. The <strong>regional fade-out interaction</strong> addresses this by dimming non-selected regions when hovering over a specific chart. This guides the viewer's attention to one region at a time, enabling focused comparison between emission scenarios while maintaining spatial context of all four regions. This layered interaction design supports both overview exploration and detail-on-demand investigation."
+    ];
+
+    rationaleParagraphs.forEach(text => {
+        rationaleDiv.append("p")
+            .style("color", "#4a5568")
+            .style("line-height", "1.8")
+            .style("margin-bottom", "16px")
+            .style("font-size", "1.05em")
+            .style("font-family", "sans-serif")
+            .html(text);
+    });
+
+    // Development Process section
+    const devDiv = writeupSection.append("div");
+
+    devDiv.append("h2")
+        .style("color", "#2d3748")
+        .style("font-size", "1.8em")
+        .style("margin-bottom", "20px")
+        .style("margin-top", "20px")
+        .style("font-weight", "700")
+        .style("font-family", "sans-serif")
+        .html("⚙️ Development Process");
+
+    const devParagraphs = [
+        "Our team split the work based on each member's strengths. One person focused on <strong>data preprocessing in Python</strong> to clean and organize the CMIP6 regional temperature data. We worked together to create multiple exploratory graphs to better understand the data. One person handled the <strong>D3.js setup</strong>, including defining the axes, scales, and small-multiples layout for the four U.S. regions. The rest of the team worked on styling, color choices, and adding interactive features like tooltips that display the year and temperature increase when hovering over a data point.",
+        
+        "In total, we spent around <strong>25–30 hours</strong> on the project. The most time-consuming part was understanding the CMIP6 data structure and deciding which subset to visualize. We tried several layouts but found the small-multiples design to be the clearest for comparing regional differences. Once the visuals were complete, we refined the color palette and typography to keep the overall design consistent and easy to read on the web."
+    ];
+
+    devParagraphs.forEach(text => {
+        devDiv.append("p")
+            .style("color", "#4a5568")
+            .style("line-height", "1.8")
+            .style("margin-bottom", "16px")
+            .style("font-size", "1.05em")
+            .style("font-family", "sans-serif")
+            .html(text);
+    });
+
+    // Add time breakdown box
+    const timeBreakdown = devDiv.append("div")
+        .style("background", "white")
+        .style("border-radius", "8px")
+        .style("padding", "20px 25px")
+        .style("margin-top", "20px")
+        .style("box-shadow", "0 2px 8px rgba(0,0,0,0.05)");
+
+    timeBreakdown.append("h3")
+        .style("color", "#2d3748")
+        .style("font-size", "1.2em")
+        .style("margin-bottom", "15px")
+        .style("font-weight", "600")
+        .style("font-family", "sans-serif")
+        .text("⏱️ Time Investment Breakdown");
+
+    const timeList = timeBreakdown.append("ul")
+        .style("list-style", "none")
+        .style("padding", "0")
+        .style("margin", "0");
+
+    const timeItems = [
+        { task: "Data exploration & preprocessing", hours: "8 hours", percentage: "27%" },
+        { task: "D3.js implementation & layout design", hours: "10 hours", percentage: "33%" },
+        { task: "Interactive features & tooltips", hours: "5 hours", percentage: "17%" },
+        { task: "Styling, colors & typography", hours: "4 hours", percentage: "13%" },
+        { task: "Testing & refinement", hours: "3 hours", percentage: "10%" }
+    ];
+
+    timeItems.forEach(item => {
+        const li = timeList.append("li")
+            .style("padding", "10px 0")
+            .style("border-bottom", "1px solid #e2e8f0")
+            .style("display", "flex")
+            .style("justify-content", "space-between")
+            .style("align-items", "center")
+            .style("font-family", "sans-serif");
+
+        li.append("span")
+            .style("color", "#4a5568")
+            .style("font-size", "1em")
+            .html(`<strong>${item.task}</strong>`);
+
+        const timeInfo = li.append("span")
+            .style("display", "flex")
+            .style("gap", "15px")
+            .style("align-items", "center");
+
+        timeInfo.append("span")
+            .style("color", "#667eea")
+            .style("font-weight", "600")
+            .text(item.hours);
+
+        timeInfo.append("span")
+            .style("color", "#718096")
+            .style("font-size", "0.9em")
+            .text(item.percentage);
+    });
+
+    // Remove last border
+    timeList.selectAll("li:last-child")
+        .style("border-bottom", "none");
+
+
+    challengesBox.append("h3")
+        .style("color", "#856404")
+        .style("font-size", "1.2em")
+        .style("margin-bottom", "12px")
+        .style("font-weight", "600")
+        .style("font-family", "sans-serif")
+        .html("🔧 Key Challenges & Solutions");
+
+    const challengesList = [
+        "<strong>Challenge:</strong> CMIP6 data complexity with multiple models and scenarios. <strong>Solution:</strong> Focused on a single model ensemble and two representative scenarios for clarity.",
+        "<strong>Challenge:</strong> Balancing information density with readability. <strong>Solution:</strong> Used small multiples with shared scales and interactive tooltips to show detail on demand.",
+        "<strong>Challenge:</strong> Preventing overplotting with 75+ years of data per region. <strong>Solution:</strong> Implemented progressive disclosure—circles appear only on hover, reducing visual clutter."
+    ];
+
+    challengesList.forEach(challenge => {
+        challengesBox.append("p")
+            .style("color", "#856404")
+            .style("line-height", "1.7")
+            .style("margin-bottom", "10px")
+            .style("font-size", "0.95em")
+            .style("font-family", "sans-serif")
+            .html(challenge);
+    });
 }
+
