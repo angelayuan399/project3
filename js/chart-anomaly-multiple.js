@@ -1,4 +1,3 @@
-// Import the same tooltip helpers
 import { positionTooltip, hideTooltip } from './helper.js';
 
 export function createAnomalyChart(data) {
@@ -118,6 +117,9 @@ export function createAnomalyChart(data) {
         const [regionName, regionData] = groupData;
         const chartG = d3.select(this); // The <g> for this specific chart
 
+        // Store region name as data attribute for hover targeting
+        chartG.attr("data-region", regionName);
+
         // Add Chart Title (Region Name)
         chartG.append("text")
             .attr("x", smallWidth / 2)
@@ -171,25 +173,22 @@ export function createAnomalyChart(data) {
             .attr("stroke-width", 2.5)
             .style("opacity", 0.9);
 
-        chartG.append("rect")
-            .attr("width", smallWidth)
-            .attr("height", smallHeight)
-            .attr("fill", "none")
-            .attr("pointer-events", "all")
-            .on("mouseover", () => chartG.selectAll(".data-circle").style("opacity", 1))
-            .on("mouseout", () => chartG.selectAll(".data-circle").style("opacity", 0));
-
-        // Draw circles for tooltips
+        // ========================================
+        // Draw circles for tooltips FIRST (so they're on top)
+        // ========================================
         chartG.selectAll(".data-circle")
             .data(regionData) // Use all points for this region
             .join("circle")
             .attr("class", "data-circle")
             .attr("cx", d => xScale(d.year))
             .attr("cy", d => yScale(d.anomaly))
-            .attr("r", 3)
+            .attr("r", 4)
             .attr("fill", d => colorScale(d.scenario))
             .style("opacity", 0) // Hide them initially
+            .style("pointer-events", "all") // Allow interaction with circles
+            .style("cursor", "pointer")
             .on("mouseover", function (event, d) {
+                // Show tooltip
                 tooltip.classed("visible", true)
                     .html(`
                         <strong>${d.region} (${d.scenario})</strong><br/>
@@ -197,14 +196,89 @@ export function createAnomalyChart(data) {
                         Increase: <strong>${d.anomaly.toFixed(2)}°C</strong>
                     `);
 
-                d3.select(this).style("opacity", 1).attr("r", 5);
+                // Enlarge this circle
+                d3.select(this)
+                    .attr("r", 6)
+                    .style("stroke", "#000")
+                    .style("stroke-width", 2);
+                
+                positionTooltip(event, tooltip);
             })
             .on("mousemove", function (event) {
                 positionTooltip(event, tooltip);
             })
             .on("mouseout", function () {
                 hideTooltip();
-                d3.select(this).style("opacity", 0).attr("r", 3);
+                
+                // Return circle to normal size
+                d3.select(this)
+                    .attr("r", 4)
+                    .style("stroke", "none");
+            });
+
+        // ========================================
+        // Add invisible overlay for REGIONAL hover (fade effect)
+        // This goes BEHIND the circles so circles can still be clicked
+        // ========================================
+        chartG.insert("rect", ":first-child") // Insert at beginning so it's behind everything
+            .attr("class", "hover-overlay")
+            .attr("width", smallWidth)
+            .attr("height", smallHeight)
+            .attr("fill", "none")
+            .attr("pointer-events", "all")
+            .style("cursor", "default")
+            .on("mouseenter", function() {
+                // Fade out all OTHER charts
+                svg.selectAll(".small-chart")
+                    .filter(d => d[0] !== regionName) // Filter out current region
+                    .transition()
+                    .duration(200)
+                    .style("opacity", 0.25);
+                
+                // Ensure this chart stays at full opacity
+                d3.select(chartG.node())
+                    .transition()
+                    .duration(200)
+                    .style("opacity", 1);
+                
+                // Show ALL circles for this chart
+                chartG.selectAll(".data-circle")
+                    .transition()
+                    .duration(200)
+                    .style("opacity", 0.7);
+            })
+            .on("mouseleave", function() {
+                // Only restore if mouse is truly leaving the chart area
+                // Check if we're not hovering over a circle
+                const relatedTarget = event.relatedTarget;
+                if (!relatedTarget || !relatedTarget.classList.contains('data-circle')) {
+                    // Restore all charts to full opacity
+                    svg.selectAll(".small-chart")
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    
+                    // Hide circles again (unless actively hovering one)
+                    chartG.selectAll(".data-circle")
+                        .filter(function() {
+                            return d3.select(this).attr("r") != "6"; // Don't hide actively hovered circle
+                        })
+                        .transition()
+                        .duration(200)
+                        .style("opacity", 0);
+                }
             });
     });
+
+    // ========================================
+    // Add instructional text
+    // ========================================
+    svg.append("text")
+        .attr("x", totalWidth / 2)
+        .attr("y", totalHeight - 5)
+        .attr("text-anchor", "middle")
+        .style("font-size", "13px")
+        .style("font-style", "italic")
+        .style("fill", "#666")
+        .text("💡 Hover over regions to compare • Hover over data points for exact values");
 }
